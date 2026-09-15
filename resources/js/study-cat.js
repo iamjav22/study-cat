@@ -1,7 +1,7 @@
 /* =========================================================
    STUDY CAT — app logic (pixel edition)
    ========================================================= */
-
+import { drawCatSprite } from './pixelcat.js';
 const SETTINGS = {
   NUDGE_MIN_MS: 12000,
   NUDGE_MAX_MS: 20000,
