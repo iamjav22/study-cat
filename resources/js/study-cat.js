@@ -94,8 +94,8 @@ function startSession(){
   completedSubjects = [];
   sessionSeconds = 0;
   setSubject();
-  showScreen('screen-session');
-  drawCatSprite(document.getElementById('cat-canvas'), 'nap', 18);
+    showScreen('screen-session');
+  playCatAnimation(document.getElementById('cat-canvas'), WORKING_CAT_FRAMES, 18, 2);
   runTimer();
   scheduleNudge();
   scheduleBreak();
@@ -103,8 +103,8 @@ function startSession(){
 function resumeSessionIfNeeded(){
   if((activeScreen === 'screen-session' || activeScreen === 'screen-break') && tasks.length){
     setSubject();
-    showScreen('screen-session');
-    drawCatSprite(document.getElementById('cat-canvas'), 'nap', 18);
+        showScreen('screen-session');
+    playCatAnimation(document.getElementById('cat-canvas'), WORKING_CAT_FRAMES, 18, 2);
     runTimer();
     scheduleNudge();
     scheduleBreak();
@@ -184,9 +184,10 @@ function setCatState(state){
   const caption = document.getElementById('cat-caption');
   const canvas = document.getElementById('cat-canvas');
   if(state === 'nap'){
-    caption.textContent = 'zzz... working alongside you';
-    drawCatSprite(canvas, 'nap', 18);
+    caption.textContent = 'working alongside you';
+    playCatAnimation(canvas, WORKING_CAT_FRAMES, 18, 2);
   } else if(state === 'alert'){
+    clearInterval(canvas._animHandle);
     caption.textContent = 'ears up — checking in';
     drawCatSprite(canvas, 'alert', 18);
   }
@@ -240,12 +241,11 @@ function updateBreakDisplay(secs){
 function skipBreak(){
   clearInterval(breakInterval);
   showScreen('screen-session');
-  drawCatSprite(document.getElementById('cat-canvas'), 'nap', 18);
+  playCatAnimation(document.getElementById('cat-canvas'), WORKING_CAT_FRAMES, 18, 2);
   runTimer();
   scheduleNudge();
   scheduleBreak();
 }
-
 /* ---------------- parking lot ---------------- */
 function openParkingLot(){ document.getElementById('parkinglot-overlay').classList.add('active'); }
 function closeParkingLot(){ document.getElementById('parkinglot-overlay').classList.remove('active'); }
