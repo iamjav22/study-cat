@@ -165,9 +165,9 @@ function endSession(){
   clearInterval(sessionTimerHandle);
   clearTimeout(nudgeTimeoutHandle);
   clearTimeout(breakTimeoutHandle);
-  renderSummary();
+    renderSummary();
   showScreen('screen-end');
-  drawCatSprite(document.getElementById('cat-canvas-end'), 'nap', 16);
+  playCatAnimation(document.getElementById('cat-canvas-end'), ENDING_CAT_FRAMES, 16, 2);
 }
 function restart(){
   tasks = []; parkingItems = []; completedSubjects = [];
