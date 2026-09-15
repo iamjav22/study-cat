@@ -5,14 +5,14 @@
    have the same number of values) and reload the page.
    ========================================================= */
 
-const CAT_PALETTE = {
+export const CAT_PALETTE = {
   1: '#2B2420', // outline
   2: '#F5F0E0', // fur
   3: '#E6A0A6', // pink (ears/cheeks)
   4: '#1E1914', // eyes
 };
 
-const CAT_SPRITES = {
+export const CAT_SPRITES = {
   nap: [
     [0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0],
     [0,1,2,1,0,0,0,0,0,1,2,1,0,0,0,0],
@@ -66,7 +66,7 @@ const CAT_SPRITES = {
  * spriteName: 'nap' | 'alert'
  * pixelSize: how many real pixels each sprite-pixel should take up
  */
-function drawCatSprite(canvasEl, spriteName, pixelSize = 18){
+export function drawCatSprite(canvasEl, spriteName, pixelSize = 18){
   const grid = CAT_SPRITES[spriteName];
   if(!canvasEl || !grid) return;
   const rows = grid.length;
