@@ -1,8 +1,7 @@
 /* =========================================================
    STUDY CAT — app logic (pixel edition)
    ========================================================= */
-import { drawCatSprite, playCatAnimation, WORKING_CAT_FRAMES } from './pixelcat.js';
-const SETTINGS = {
+import { drawCatSprite, playCatAnimation, WORKING_CAT_FRAMES, STARTING_CAT_FRAMES } from './pixelcat.js';const SETTINGS = {
   NUDGE_MIN_MS: 12000,
   NUDGE_MAX_MS: 20000,
   BREAK_AFTER_MS: 40000,
@@ -175,7 +174,8 @@ function restart(){
   document.getElementById('task-list').innerHTML = '';
   document.getElementById('parking-list').innerHTML = '';
   document.getElementById('start-btn').disabled = true;
-  showScreen('screen-planner');
+    showScreen('screen-planner');
+  playCatAnimation(document.getElementById('cat-canvas-start'), STARTING_CAT_FRAMES, 18, 2);
   saveState();
 }
 
@@ -334,7 +334,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('spotify-label').textContent = 'PLAYLIST: LO-FI MIX';
     document.getElementById('spotify-btn').textContent = 'STOP';
   }
-
+  if(activeScreen === 'screen-planner'){
+    playCatAnimation(document.getElementById('cat-canvas-start'), STARTING_CAT_FRAMES, 18, 2);
+  }
   resumeSessionIfNeeded();
 });
 
