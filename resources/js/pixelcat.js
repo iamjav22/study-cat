@@ -259,8 +259,26 @@ export const STARTING_CAT_FRAMES = [
 export function drawCatSprite(canvasEl, spriteOrName, pixelSize = 18){
   const grid = typeof spriteOrName === 'string' ? CAT_SPRITES[spriteOrName] : spriteOrName;
   if(!canvasEl || !grid) return;
-  const rows = grid.length;
-  const cols = grid[0].length;
+
+  // find the tight bounding box of non-empty pixels, so extra blank
+  // space around the artwork doesn't get drawn or sized into the canvas
+  let minX = grid[0].length, maxX = 0, minY = grid.length, maxY = 0;
+  let hasContent = false;
+  for(let y = 0; y < grid.length; y++){
+    for(let x = 0; x < grid[y].length; x++){
+      if(grid[y][x] !== 0){
+        hasContent = true;
+        if(x < minX) minX = x;
+        if(x > maxX) maxX = x;
+        if(y < minY) minY = y;
+        if(y > maxY) maxY = y;
+      }
+    }
+  }
+  if(!hasContent){ minX = 0; minY = 0; maxX = grid[0].length-1; maxY = grid.length-1; }
+
+  const cols = maxX - minX + 1;
+  const rows = maxY - minY + 1;
 
   canvasEl.width = cols * pixelSize;
   canvasEl.height = rows * pixelSize;
@@ -269,16 +287,15 @@ export function drawCatSprite(canvasEl, spriteOrName, pixelSize = 18){
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
 
-  for(let y = 0; y < rows; y++){
-    for(let x = 0; x < cols; x++){
+  for(let y = minY; y <= maxY; y++){
+    for(let x = minX; x <= maxX; x++){
       const v = grid[y][x];
       if(v === 0) continue;
       ctx.fillStyle = CAT_PALETTE[v] || '#000';
-      ctx.fillRect(x*pixelSize, y*pixelSize, pixelSize, pixelSize);
+      ctx.fillRect((x-minX)*pixelSize, (y-minY)*pixelSize, pixelSize, pixelSize);
     }
   }
 }
-
 /**
  * Plays a looping animation on a canvas by cycling through an array of frame grids.
  * canvasEl: the <canvas> element
