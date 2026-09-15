@@ -1,7 +1,8 @@
 /* =========================================================
    STUDY CAT — app logic (pixel edition)
    ========================================================= */
-import { drawCatSprite, playCatAnimation, WORKING_CAT_FRAMES, STARTING_CAT_FRAMES } from './pixelcat.js';const SETTINGS = {
+import { drawCatSprite, playCatAnimation, WORKING_CAT_FRAMES, STARTING_CAT_FRAMES, ENDING_CAT_FRAMES } from './pixelcat.js';
+const SETTINGS = {
   NUDGE_MIN_MS: 12000,
   NUDGE_MAX_MS: 20000,
   BREAK_AFTER_MS: 40000,
