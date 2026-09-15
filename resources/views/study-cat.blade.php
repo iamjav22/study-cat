@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Cat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+@vite(['resources/css/study-cat.css', 'resources/js/pixelcat.js', 'resources/js/study-cat.js'])
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<div class="app">
+
+  <div class="brandrow">
+    <span class="brand-dot"></span>
+    <div class="brand">STUDY CAT</div>
+  </div>
+
+  <!-- PLANNER SCREEN -->
+  <div class="panel screen active" id="screen-planner">
+    <h1 class="prompt">WHAT ARE WE<br>WORKING ON TODAY?</h1>
+    <p class="sub">&gt; add each subject as its own block_</p>
+    <div class="task-input-row">
+      <input type="text" id="task-input" placeholder="e.g. Biology..." />
+      <input type="number" id="task-minutes-input" placeholder="min" min="1" class="minutes-input" />
+      <button class="icon-btn" id="add-task-btn">+</button>
+    </div>
+    <div class="task-list" id="task-list"></div>
+    <button class="primary-btn" id="start-btn" disabled>START SESSION</button>
+  </div>
+
+  <!-- SESSION SCREEN -->
+  <div class="panel screen" id="screen-session">
+    <div class="session-top">
+      <div>
+        <div class="session-subject">CURRENTLY WORKING ON</div>
+        <div class="session-title" id="current-subject">BIOLOGY</div>
+        <div class="session-target" id="session-target"></div>
+      </div>
+      <div class="session-top-right">
+        <div class="timer" id="session-timer">00:00</div>
+        <button title="Parking lot" id="open-parking-btn" class="parking-btn">&#128190;</button>
+      </div>
+    </div>
+
+    <div class="cat-stage">
+      <canvas id="cat-canvas" width="320" height="260"></canvas>
+    </div>
+    <div class="cat-caption" id="cat-caption">zzz... working alongside you</div>
+
+    <div class="spotify-strip off" id="spotify-strip">
+      <div class="spotify-dot"></div>
+      <span id="spotify-label">SPOTIFY: OFFLINE</span>
+      <button id="spotify-btn">CONNECT</button>
+    </div>
+
+    <div class="session-controls">
+      <button class="pill-btn" id="next-subject-btn">NEXT&#10132;</button>
+      <button class="pill-btn" id="end-session-btn">END &#9632;</button>
+    </div>
+    <p class="note" id="session-note">SAVE POINT ACTIVE — progress kept on reload</p>
+  </div>
+
+  <!-- BREAK SCREEN -->
+  <div class="panel screen" id="screen-break">
+    <div class="cat-stage">
+      <canvas id="cat-canvas-break" width="320" height="260"></canvas>
+    </div>
+    <h2 class="break-title">CAT IS GETTING SLEEPY</h2>
+    <p class="sub center">&gt; take a short break. back to it after_</p>
+    <div class="break-timer" id="break-timer">05:00</div>
+    <button class="primary-btn" id="back-to-work-btn">BACK TO WORK</button>
+  </div>
+
+  <!-- END SCREEN -->
+  <div class="panel screen" id="screen-end">
+    <div class="cat-stage">
+      <canvas id="cat-canvas-end" width="320" height="260"></canvas>
+    </div>
+    <h2 class="break-title">NICE WORK TODAY</h2>
+    <div class="summary-block">
+      <h3>SUBJECTS COVERED</h3>
+      <div id="summary-subjects"></div>
+    </div>
+    <div class="summary-block" id="summary-parking-block">
+      <h3>FROM THE PARKING LOT</h3>
+      <div id="summary-parking"></div>
+    </div>
+    <button class="primary-btn" id="plan-tomorrow-btn">PLAN TOMORROW</button>
+  </div>
+
+</div>
+
+<!-- NUDGE OVERLAY -->
+<div class="overlay" id="nudge-overlay">
+  <div class="sheet">
+    <div class="nudge-row">
+      <canvas id="cat-canvas-nudge" width="120" height="100"></canvas>
+      <div class="nudge-text">STILL ON <span id="nudge-subject">BIOLOGY</span>?</div>
+    </div>
+    <div class="sheet-row">
+      <button class="yes-btn" id="nudge-yes-btn">YES</button>
+      <button class="no-btn" id="nudge-no-btn">SWITCHING</button>
+    </div>
+  </div>
+</div>
+
+<!-- PARKING LOT OVERLAY -->
+<div class="overlay" id="parkinglot-overlay">
+  <div class="sheet" id="parkinglot-sheet">
+    <h3>&#128190; IDEA PARKING</h3>
+    <p class="sub">&gt; log it here instead of starting it now_</p>
+    <div class="task-input-row">
+      <input type="text" id="park-input" placeholder="Quick idea..." />
+      <button class="icon-btn" id="add-parking-btn">+</button>
+    </div>
+    <div class="task-list" id="parking-list"></div>
+    <button class="ghost-btn" id="close-parking-btn">BACK TO SESSION</button>
+  </div>
+</div>
+
+</body>
+</html>
