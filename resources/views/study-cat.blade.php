@@ -22,7 +22,10 @@
   <!-- PLANNER SCREEN -->
   <div class="panel screen active" id="screen-planner">
     <h1 class="prompt">WHAT ARE WE<br>WORKING ON TODAY?</h1>
-    <p class="sub">&gt; add each subject as its own block_</p>
+<div class="cat-stage">
+  <canvas id="cat-canvas-start" width="320" height="260"></canvas>
+</div>
+<p class="sub">&gt; add each subject as its own block_</p>
     <div class="task-input-row">
       <input type="text" id="task-input" placeholder="e.g. Biology..." />
       <input type="number" id="task-minutes-input" placeholder="min" min="1" class="minutes-input" />
