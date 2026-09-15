@@ -367,11 +367,52 @@ export function drawCatSprite(canvasEl, spriteOrName, pixelSize = 18){
  * loop: set false to play once and stop
  */
 export function playCatAnimation(canvasEl, frameArray, pixelSize, fps, loop = true){
+  if(!canvasEl || !frameArray || !frameArray.length) return;
+
+  // find one shared bounding box across ALL frames, so the canvas size
+  // (and therefore its centered position) never changes mid-animation
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  frameArray.forEach(grid => {
+    for(let y = 0; y < grid.length; y++){
+      for(let x = 0; x < grid[y].length; x++){
+        if(grid[y][x] !== 0){
+          if(x < minX) minX = x;
+          if(x > maxX) maxX = x;
+          if(y < minY) minY = y;
+          if(y > maxY) maxY = y;
+        }
+      }
+    }
+  });
+  if(minX === Infinity){ minX = 0; minY = 0; maxX = frameArray[0][0].length-1; maxY = frameArray[0].length-1; }
+
+  const cols = maxX - minX + 1;
+  const rows = maxY - minY + 1;
+  canvasEl.width = cols * pixelSize;
+  canvasEl.height = rows * pixelSize;
+
+  const ctx = canvasEl.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+
   let i = 0;
+  const drawFrame = () => {
+    const grid = frameArray[i];
+    ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+    for(let y = minY; y <= maxY; y++){
+      for(let x = minX; x <= maxX; x++){
+        const v = grid[y] ? grid[y][x] : 0;
+        if(!v) continue;
+        ctx.fillStyle = CAT_PALETTE[v] || '#000';
+        ctx.fillRect((x-minX)*pixelSize, (y-minY)*pixelSize, pixelSize, pixelSize);
+      }
+    }
+  };
+
   clearInterval(canvasEl._animHandle);
+  drawFrame();
   canvasEl._animHandle = setInterval(() => {
-    drawCatSprite(canvasEl, frameArray[i], pixelSize);
     i = (i + 1) % frameArray.length;
+    drawFrame();
     if(!loop && i === 0) clearInterval(canvasEl._animHandle);
   }, 1000/fps);
 }
