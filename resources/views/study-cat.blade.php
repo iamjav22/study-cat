@@ -49,9 +49,9 @@
       </div>
     </div>
 
-    <div class="cat-stage">
-      <canvas id="cat-canvas" width="320" height="260"></canvas>
-    </div>
+    <div class="cat-stage" style="margin-top: 24px;">
+  <canvas id="cat-canvas-start" width="320" height="260"></canvas>
+</div>
     <div class="cat-caption" id="cat-caption">zzz... working alongside you</div>
 
     <div class="spotify-strip off" id="spotify-strip">
