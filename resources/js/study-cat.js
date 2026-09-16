@@ -1,7 +1,7 @@
 /* =========================================================
    STUDY CAT — app logic (pixel edition)
    ========================================================= */
-import { drawCatSprite, playCatAnimation, WORKING_CAT_FRAMES, STARTING_CAT_FRAMES, ENDING_CAT_FRAMES } from './pixelcat.js';
+import { drawCatSprite, playCatAnimation, WORKING_CAT_FRAMES, STARTING_CAT_FRAMES, NUDGE_CAT_FRAMES, ENDING_CAT_FRAMES } from './pixelcat.js';
 const SETTINGS = {
   NUDGE_MIN_MS: 12000,
   NUDGE_MAX_MS: 20000,
@@ -202,7 +202,7 @@ function scheduleNudge(){
   nudgeTimeoutHandle = setTimeout(()=>{
     document.getElementById('nudge-subject').textContent = tasks[currentTaskIndex].name.toUpperCase();
     setCatState('alert');
-    drawCatSprite(document.getElementById('cat-canvas-nudge'), 'alert', 8);
+    drawCatSprite(document.getElementById('cat-canvas-nudge'), NUDGE_CAT_FRAMES[0], 8);
     document.getElementById('nudge-overlay').classList.add('active');
   }, delay);
 }
