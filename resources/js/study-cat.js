@@ -1,7 +1,7 @@
 /* =========================================================
    STUDY CAT — app logic (pixel edition)
    ========================================================= */
-import { drawCatSprite, playCatAnimation, WORKING_CAT_FRAMES, STARTING_CAT_FRAMES, ENDING_CAT_FRAMES, NUDGE_CAT_FRAMES, WORKING_CAT_ALERT } from './pixelcat.js';
+import { drawCatSprite, playCatAnimation, WORKING_CAT_FRAMES, STARTING_CAT_FRAMES, ENDING_CAT_FRAMES, NUDGE_CAT_FRAMES, SESSION_ALERT_FRAMES } from './pixelcat.js';
   const SETTINGS = {
   NUDGE_MIN_MS: 60*1000,       // nudge after 1 minute
   NUDGE_MAX_MS: 60*1000,       // (same value = fires right at 1 min, no randomness)
@@ -188,11 +188,9 @@ function setCatState(state){
   if(state === 'nap'){
     caption.textContent = 'working alongside you';
     playCatAnimation(canvas, WORKING_CAT_FRAMES, 18, 2);
-  } else if(state === 'alert'){
-  clearInterval(canvas._animHandle);
+  } } else if(state === 'alert'){
   caption.textContent = 'ears up — checking in';
-  drawCatSprite(canvas, WORKING_CAT_ALERT[0], 18);
-}
+  playCatAnimation(canvas, SESSION_ALERT_FRAMES, 18, 1);
 }
 
 /* ---------------- nudges ---------------- */
