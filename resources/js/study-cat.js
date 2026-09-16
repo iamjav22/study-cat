@@ -2,11 +2,12 @@
    STUDY CAT — app logic (pixel edition)
    ========================================================= */
 import { drawCatSprite, playCatAnimation, WORKING_CAT_FRAMES, STARTING_CAT_FRAMES, ENDING_CAT_FRAMES, NUDGE_CAT_FRAMES, WORKING_CAT_ALERT } from './pixelcat.js';
-const SETTINGS = {
-  NUDGE_MIN_MS: 12000,
-  NUDGE_MAX_MS: 20000,
-  BREAK_AFTER_MS: 40000,
-  BREAK_LENGTH_SECONDS: 300,
+  const SETTINGS = {
+  NUDGE_MIN_MS: 60*1000,       // nudge after 1 minute
+  NUDGE_MAX_MS: 60*1000,       // (same value = fires right at 1 min, no randomness)
+  BREAK_AFTER_MS: 2*60*1000,   // break after 2 minutes
+  BREAK_LENGTH_SECONDS: 300,   // 5-minute break
+};
 };
 /* For real deployment, try:
    NUDGE_MIN_MS: 10*60*1000, NUDGE_MAX_MS: 18*60*1000,
