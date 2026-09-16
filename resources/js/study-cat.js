@@ -219,7 +219,7 @@ function scheduleBreak(){
     clearInterval(sessionTimerHandle);
     clearTimeout(nudgeTimeoutHandle);
     showScreen('screen-break');
-    drawCatSprite(document.getElementById('cat-canvas-break'), 'stretch', 16);
+    playCatAnimation(document.getElementById('cat-canvas-break'), BREAK_CAT_FRAMES, 16, 2);
     startBreakCountdown();
   }, SETTINGS.BREAK_AFTER_MS);
 }
