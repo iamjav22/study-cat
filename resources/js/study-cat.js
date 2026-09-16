@@ -8,7 +8,6 @@ import { drawCatSprite, playCatAnimation, WORKING_CAT_FRAMES, STARTING_CAT_FRAME
   BREAK_AFTER_MS: 2*60*1000,   // break after 2 minutes
   BREAK_LENGTH_SECONDS: 300,   // 5-minute break
 };
-};
 /* For real deployment, try:
    NUDGE_MIN_MS: 10*60*1000, NUDGE_MAX_MS: 18*60*1000,
    BREAK_AFTER_MS: 25*60*1000, BREAK_LENGTH_SECONDS: 300
