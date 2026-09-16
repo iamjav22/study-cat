@@ -187,9 +187,10 @@ function setCatState(state){
   if(state === 'nap'){
     caption.textContent = 'working alongside you';
     playCatAnimation(canvas, WORKING_CAT_FRAMES, 18, 2);
-  } } else if(state === 'alert'){
-  caption.textContent = 'ears up — checking in';
-  playCatAnimation(canvas, SESSION_ALERT_FRAMES, 18, 1);
+  } else if(state === 'alert'){
+    caption.textContent = 'ears up — checking in';
+    playCatAnimation(canvas, SESSION_ALERT_FRAMES, 18, 1);
+  }
 }
 
 /* ---------------- nudges ---------------- */
