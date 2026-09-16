@@ -354,3 +354,11 @@ input[type=text]::placeholder{ color: #A79C84; }
   color: var(--text-soft);
   text-align:center;
 }
+@keyframes cat-head-tilt {
+  0%, 100% { transform: rotate(-7deg); }
+  50% { transform: rotate(7deg); }
+}
+#cat-canvas-nudge {
+  animation: cat-head-tilt 1.4s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
