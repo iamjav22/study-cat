@@ -190,6 +190,41 @@ input[type=text]::placeholder{ color: #A79C84; }
   cursor:pointer;
   width:100%;
 }
+.task-chip-wrap{ display:flex; flex-direction:column; gap:0; }
+.task-chip{
+  display:flex; align-items:center; gap:8px;
+  background: var(--chip);
+  border: 3px solid var(--line);
+  padding: 8px 10px;
+  font-size: 18px;
+}
+.task-chip-name{ flex:1; }
+.task-chip-badge{
+  font-family:'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--mustard-deep);
+  white-space: nowrap;
+}
+.clock-btn, .chip-remove-btn{
+  background: none; border: none; cursor:pointer;
+  font-size: 16px; color: var(--text-soft);
+}
+.time-picker{
+  display:flex; flex-wrap:wrap; gap:6px;
+  background: var(--panel);
+  border: 3px solid var(--line);
+  border-top: none;
+  padding: 8px;
+}
+.time-preset-btn{
+  background: var(--chip);
+  border: 2px solid var(--line);
+  font-family:'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+.time-preset-btn:hover{ background: var(--mustard); }
 
 /* ---- Session ---- */
 .session-top{
