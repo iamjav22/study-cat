@@ -27,10 +27,10 @@
 </div>
 <p class="sub">&gt; add each subject as its own block_</p>
     <div class="task-input-row">
-      <input type="text" id="task-input" placeholder="e.g. Biology..." />
-      <input type="number" id="task-minutes-input" placeholder="min" min="1" class="minutes-input" />
-      <button class="icon-btn" id="add-task-btn">+</button>
-    </div>
+  <input type="text" id="task-input" placeholder="eg. Design portfolio" />
+  <button class="icon-btn" id="add-task-btn">+</button>
+</div>
+<p class="sub" id="time-hint" style="display:none;">&gt; how long do you want to work on each task?</p>
     <div class="task-list" id="task-list"></div>
     <button class="primary-btn" id="start-btn" disabled>START SESSION</button>
   </div>
