@@ -1,7 +1,7 @@
 /* =========================================================
    STUDY CAT — app logic (pixel edition)
    ========================================================= */
-import { drawCatSprite, playCatAnimation, WORKING_CAT_FRAMES, STARTING_CAT_FRAMES, ENDING_CAT_FRAMES, NUDGE_CAT_FRAMES, SESSION_ALERT_FRAMES, BREAK_CAT_FRAMES } from './pixelcat.js';
+import { drawCatSprite, playCatAnimation, WORKING_CAT_FRAMES, STARTING_CAT_FRAMES, ENDING_CAT_FRAMES, NUDGE_CAT_FRAMES, SESSION_ALERT_FRAMES, BREAK_CAT_FRAMES, CLOCK_ICON } from './pixelcat.js';
 const SETTINGS = {
   NUDGE_MIN_MS: 8*60*1000,
   NUDGE_MAX_MS: 12*60*1000,
@@ -102,11 +102,13 @@ function renderTasks(){
     clockBtn.addEventListener('click', ()=> toggleTimePicker(i));
     chip.appendChild(clockBtn);
 
-    const removeBtn = document.createElement('button');
-    removeBtn.className = 'chip-remove-btn';
-    removeBtn.textContent = 'X';
-    removeBtn.addEventListener('click', ()=> removeTask(i));
-    chip.appendChild(removeBtn);
+        const clockBtn = document.createElement('button');
+    clockBtn.className = 'clock-btn';
+    clockBtn.addEventListener('click', ()=> toggleTimePicker(i));
+    const clockCanvas = document.createElement('canvas');
+    clockBtn.appendChild(clockCanvas);
+    chip.appendChild(clockBtn);
+    drawCatSprite(clockCanvas, CLOCK_ICON, 3);
 
     wrap.appendChild(chip);
 
