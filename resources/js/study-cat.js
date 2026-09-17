@@ -59,36 +59,113 @@ function showScreen(id){
 }
 
 /* ---------------- planner ---------------- */
+/* ---------------- planner ---------------- */
 function addTask(){
   const input = document.getElementById('task-input');
-  const minutesInput = document.getElementById('task-minutes-input');
   const val = input.value.trim();
   if(!val) return;
-  const minutes = parseInt(minutesInput.value, 10);
-  tasks.push({ name: val, minutes: (minutes > 0 ? minutes : null) });
+  tasks.push({ name: val, minutes: null, timeChosen: false, pickerOpen: false });
   input.value = '';
-  minutesInput.value = '';
   renderTasks();
   saveState();
 }
 function removeTask(i){ tasks.splice(i,1); renderTasks(); saveState(); }
+
 function renderTasks(){
   const list = document.getElementById('task-list');
+  const hint = document.getElementById('time-hint');
   list.innerHTML = '';
+  hint.style.display = tasks.length ? 'block' : 'none';
+
   tasks.forEach((t,i)=>{
-    const div = document.createElement('div');
-    div.className = 'task-chip';
-    const span = document.createElement('span');
-    span.textContent = t.minutes ? `${t.name}  ·  ${t.minutes} min` : t.name;
-    const btn = document.createElement('button');
-    btn.textContent = 'X';
-    btn.addEventListener('click', ()=>removeTask(i));
-    div.appendChild(span); div.appendChild(btn);
-    list.appendChild(div);
+    const wrap = document.createElement('div');
+    wrap.className = 'task-chip-wrap';
+
+    const chip = document.createElement('div');
+    chip.className = 'task-chip';
+
+    const name = document.createElement('span');
+    name.className = 'task-chip-name';
+    name.textContent = t.name.toUpperCase();
+    chip.appendChild(name);
+
+    if(t.timeChosen){
+      const badge = document.createElement('span');
+      badge.className = 'task-chip-badge';
+      badge.textContent = '\u25CF ' + (t.minutes ? `${t.minutes} MIN` : 'NO LIMIT');
+      chip.appendChild(badge);
+    }
+
+    const clockBtn = document.createElement('button');
+    clockBtn.className = 'clock-btn';
+    clockBtn.innerHTML = '&#9201;';
+    clockBtn.addEventListener('click', ()=> toggleTimePicker(i));
+    chip.appendChild(clockBtn);
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'chip-remove-btn';
+    removeBtn.textContent = 'X';
+    removeBtn.addEventListener('click', ()=> removeTask(i));
+    chip.appendChild(removeBtn);
+
+    wrap.appendChild(chip);
+
+    if(t.pickerOpen){
+      wrap.appendChild(buildTimePicker(i));
+    }
+
+    list.appendChild(wrap);
   });
+
   document.getElementById('start-btn').disabled = tasks.length === 0;
 }
 
+function buildTimePicker(i){
+  const picker = document.createElement('div');
+  picker.className = 'time-picker';
+  const presets = [
+    ['15 MIN', 15], ['25 MIN', 25], ['45 MIN', 45], ['NO LIMIT', null]
+  ];
+  presets.forEach(([label, val])=>{
+    const btn = document.createElement('button');
+    btn.textContent = label;
+    btn.className = 'time-preset-btn';
+    btn.addEventListener('click', ()=> selectTime(i, val));
+    picker.appendChild(btn);
+  });
+  const customBtn = document.createElement('button');
+  customBtn.textContent = 'CUSTOM';
+  customBtn.className = 'time-preset-btn';
+  customBtn.addEventListener('click', ()=> openCustomInput(i));
+  picker.appendChild(customBtn);
+  return picker;
+}
+
+function toggleTimePicker(i){
+  const wasOpen = tasks[i].pickerOpen;
+  tasks.forEach(t => t.pickerOpen = false); // only one open at a time
+  tasks[i].pickerOpen = !wasOpen;
+  renderTasks();
+}
+
+function selectTime(i, minutesValue){
+  tasks[i].minutes = minutesValue;
+  tasks[i].timeChosen = true;
+  renderTasks();
+  saveState();
+  // auto-close this picker 4s after a choice is made, so the confirmation is visible first
+  setTimeout(()=>{
+    if(tasks[i]) { tasks[i].pickerOpen = false; renderTasks(); }
+  }, 4000);
+}
+
+function openCustomInput(i){
+  const val = prompt('Custom time in minutes:');
+  const num = parseInt(val, 10);
+  if(num > 0){
+    selectTime(i, num);
+  }
+}
 /* ---------------- session ---------------- */
 function startSession(){
   currentTaskIndex = 0;
@@ -321,7 +398,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('add-task-btn').addEventListener('click', addTask);
   document.getElementById('task-input').addEventListener('keydown', e=>{ if(e.key === 'Enter') addTask(); });
-  document.getElementById('task-minutes-input').addEventListener('keydown', e=>{ if(e.key === 'Enter') addTask(); });
   document.getElementById('start-btn').addEventListener('click', startSession);
 
   document.getElementById('open-parking-btn').addEventListener('click', openParkingLot);
