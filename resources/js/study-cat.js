@@ -2,16 +2,15 @@
    STUDY CAT — app logic (pixel edition)
    ========================================================= */
 import { drawCatSprite, playCatAnimation, WORKING_CAT_FRAMES, STARTING_CAT_FRAMES, ENDING_CAT_FRAMES, NUDGE_CAT_FRAMES, SESSION_ALERT_FRAMES, BREAK_CAT_FRAMES } from './pixelcat.js';
-  const SETTINGS = {
-  NUDGE_MIN_MS: 60*1000,       // nudge after 1 minute
-  NUDGE_MAX_MS: 60*1000,       // (same value = fires right at 1 min, no randomness)
-  BREAK_AFTER_MS: 2*60*1000,   // break after 2 minutes
-  BREAK_LENGTH_SECONDS: 300,   // 5-minute break
+const SETTINGS = {
+  NUDGE_MIN_MS: 8*60*1000,
+  NUDGE_MAX_MS: 12*60*1000,
+  WORK_LENGTH_MS: 25*60*1000,
+  SHORT_BREAK_SECONDS: 5*60,
+  LONG_BREAK_SECONDS: 20*60,
+  POMODOROS_BEFORE_LONG_BREAK: 4,
 };
-/* For real deployment, try:
-   NUDGE_MIN_MS: 10*60*1000, NUDGE_MAX_MS: 18*60*1000,
-   BREAK_AFTER_MS: 25*60*1000, BREAK_LENGTH_SECONDS: 300
-*/
+
 
 const STORAGE_KEY = 'studyCatState';
 
@@ -26,11 +25,12 @@ let activeScreen = 'screen-planner';
 let sessionTimerHandle = null;
 let nudgeTimeoutHandle = null;
 let breakTimeoutHandle = null;
-let breakInterval = null;
+let breakInterval = null; let pomodoroCount = 0;
+
 
 /* ---------------- persistence ---------------- */
-function saveState(){
-  const state = { tasks, parkingItems, currentTaskIndex, sessionSeconds, completedSubjects, spotifyOn, activeScreen };
+  function saveState(){
+  const state = { tasks, parkingItems, currentTaskIndex, sessionSeconds, completedSubjects, spotifyOn, activeScreen, pomodoroCount };
   try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
   catch(e){ console.warn('Could not save state', e); }
 }
@@ -44,8 +44,9 @@ function loadState(){
     currentTaskIndex = state.currentTaskIndex || 0;
     sessionSeconds = state.sessionSeconds || 0;
     completedSubjects = state.completedSubjects || [];
-    spotifyOn = state.spotifyOn || false;
+        spotifyOn = state.spotifyOn || false;
     activeScreen = state.activeScreen || 'screen-planner';
+    pomodoroCount = state.pomodoroCount || 0;
   }catch(e){ console.warn('Could not load saved state', e); }
 }
 
@@ -218,13 +219,22 @@ function scheduleBreak(){
   breakTimeoutHandle = setTimeout(()=>{
     clearInterval(sessionTimerHandle);
     clearTimeout(nudgeTimeoutHandle);
-    showScreen('screen-break');
-    playCatAnimation(document.getElementById('cat-canvas-break'), BREAK_CAT_FRAMES, 16, 2);
-    startBreakCountdown();
-  }, SETTINGS.BREAK_AFTER_MS);
+    startBreak();
+  }, SETTINGS.WORK_LENGTH_MS);
 }
-function startBreakCountdown(){
-  let secs = SETTINGS.BREAK_LENGTH_SECONDS;
+function startBreak(){
+  pomodoroCount++;
+  const isLongBreak = pomodoroCount >= SETTINGS.POMODOROS_BEFORE_LONG_BREAK;
+  const breakSeconds = isLongBreak ? SETTINGS.LONG_BREAK_SECONDS : SETTINGS.SHORT_BREAK_SECONDS;
+  if(isLongBreak) pomodoroCount = 0;
+
+  showScreen('screen-break');
+  playCatAnimation(document.getElementById('cat-canvas-break'), BREAK_CAT_FRAMES, 16, 2);
+  startBreakCountdown(breakSeconds);
+  saveState();
+}
+function startBreakCountdown(seconds){
+  let secs = seconds;
   updateBreakDisplay(secs);
   clearInterval(breakInterval);
   breakInterval = setInterval(()=>{
