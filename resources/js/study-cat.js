@@ -96,12 +96,6 @@ function renderTasks(){
       chip.appendChild(badge);
     }
 
-    const clockBtn = document.createElement('button');
-    clockBtn.className = 'clock-btn';
-    clockBtn.innerHTML = '&#9201;';
-    clockBtn.addEventListener('click', ()=> toggleTimePicker(i));
-    chip.appendChild(clockBtn);
-
         const clockBtn = document.createElement('button');
     clockBtn.className = 'clock-btn';
     clockBtn.addEventListener('click', ()=> toggleTimePicker(i));
