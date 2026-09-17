@@ -76,10 +76,12 @@ function renderTasks(){
   const hint = document.getElementById('time-hint');
   list.innerHTML = '';
   hint.style.display = tasks.length ? 'block' : 'none';
-
   tasks.forEach((t,i)=>{
     const wrap = document.createElement('div');
     wrap.className = 'task-chip-wrap';
+
+    const row = document.createElement('div');
+    row.className = 'task-row';
 
     const chip = document.createElement('div');
     chip.className = 'task-chip';
@@ -96,15 +98,17 @@ function renderTasks(){
       chip.appendChild(badge);
     }
 
-        const clockBtn = document.createElement('button');
+    row.appendChild(chip);
+
+    const clockBtn = document.createElement('button');
     clockBtn.className = 'clock-btn';
     clockBtn.addEventListener('click', ()=> toggleTimePicker(i));
     const clockCanvas = document.createElement('canvas');
     clockBtn.appendChild(clockCanvas);
-    chip.appendChild(clockBtn);
+    row.appendChild(clockBtn);
     drawCatSprite(clockCanvas, CLOCK_ICON, 3);
 
-    wrap.appendChild(chip);
+    wrap.appendChild(row);
 
     if(t.pickerOpen){
       wrap.appendChild(buildTimePicker(i));
