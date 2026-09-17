@@ -397,3 +397,16 @@ input[type=text]::placeholder{ color: #A79C84; }
   animation: cat-head-tilt 1.4s ease-in-out infinite;
   transform-origin: 50% 90%;
 }
+.clock-btn{
+  background: var(--chip);
+  border: 3px solid var(--line);
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.clock-btn:active{ transform: translate(2px,2px); }
