@@ -46,7 +46,7 @@
       </div>
       <div class="session-top-right">
         <div class="timer" id="session-timer">00:00</div>
-        <button title="Parking lot" id="open-parking-btn" class="parking-btn">&#128190;</button>
+        <button title="Parking lot" id="open-parking-btn" class="parking-btn"><canvas class="bulb"></canvas></button>
       </div>
     </div>
 
@@ -108,7 +108,7 @@
     <div class="sheet-row">
       <button class="yes-btn" id="nudge-yes-btn">YES</button>
       <button class="no-btn" id="nudge-no-btn">SWITCHING</button>
-      <button class="no-btn idea-btn" id="nudge-idea-btn" title="Parking lot">&#128190; IDEA</button>
+      <button class="no-btn idea-btn" id="nudge-idea-btn" title="Parking lot"><canvas class="bulb"></canvas><span>IDEA</span></button>
     </div>
   </div>
 </div>
@@ -116,7 +116,7 @@
 <!-- PARKING LOT OVERLAY -->
 <div class="overlay" id="parkinglot-overlay">
   <div class="sheet" id="parkinglot-sheet">
-    <h3>&#128190; IDEA PARKING</h3>
+    <h3 class="bulb-title"><canvas class="bulb"></canvas><span>IDEA PARKING</span></h3>
     <p class="sub">&gt; log it here instead of starting it now_</p>
     <div class="task-input-row">
       <input type="text" id="park-input" placeholder="Quick idea..." />
