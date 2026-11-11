@@ -678,15 +678,26 @@ function playCatAnimation(canvasEl, frameArray, pixelSize, fps, loop = true){
 /* =========================================================
    STUDY CAT — app logic (pixel edition)
    ========================================================= */
-const SETTINGS = {
-  NUDGE_MIN_MS: 60*1000,
-  NUDGE_MAX_MS: 60*1000,
-  WORK_LENGTH_MS: 2*60*1000,
+/* ---- timing: DEMO (fast, for showing mentors) vs REAL (Pomodoro) ---- */
+const SETTINGS_DEMO = {
+  NUDGE_MIN_MS: 20*1000,
+  NUDGE_MAX_MS: 20*1000,
+  WORK_LENGTH_MS: 60*1000,
+  SHORT_BREAK_SECONDS: 30,
+  LONG_BREAK_SECONDS: 30,
+  POMODOROS_BEFORE_LONG_BREAK: 4,
+};
+const SETTINGS_REAL = {
+  NUDGE_MIN_MS: 8*60*1000,
+  NUDGE_MAX_MS: 12*60*1000,
+  WORK_LENGTH_MS: 25*60*1000,
   SHORT_BREAK_SECONDS: 5*60,
   LONG_BREAK_SECONDS: 20*60,
   POMODOROS_BEFORE_LONG_BREAK: 4,
 };
-
+let demoMode = true;
+try{ const d = localStorage.getItem('studyCatDemo'); if(d !== null) demoMode = d === '1'; }catch(e){}
+const SETTINGS = new Proxy({}, { get: (_, k) => (demoMode ? SETTINGS_DEMO : SETTINGS_REAL)[k] });
 
 const STORAGE_KEY = 'studyCatState';
 
@@ -848,6 +859,7 @@ function openCustomInput(i){
 }
 /* ---------------- session ---------------- */
 function startSession(){
+  unlockAudio();
   currentTaskIndex = 0;
   completedSubjects = [];
   sessionSeconds = 0;
@@ -919,6 +931,7 @@ function nextSubject(){
   saveState();
 }
 function endSession(){
+  stopTitleFlash();
   if(!completedSubjects.includes(tasks[currentTaskIndex].name)) completedSubjects.push(tasks[currentTaskIndex].name);
   clearInterval(sessionTimerHandle);
   clearTimeout(nudgeTimeoutHandle);
@@ -963,14 +976,71 @@ function scheduleNudge(){
     setCatState('alert');
     drawCatSprite(document.getElementById('cat-canvas-nudge'), NUDGE_CAT_FRAMES[0], 8);
     document.getElementById('nudge-overlay').classList.add('active');
+    playPing();
+    startTitleFlash('STILL ON ' + tasks[currentTaskIndex].name.toUpperCase() + '?');
   }, delay);
 }
 function closeNudge(stillOn){
+  stopTitleFlash();
   document.getElementById('nudge-overlay').classList.remove('active');
   setCatState('nap');
   if(!stillOn){ nextSubject(); }
   scheduleNudge();
 }
+
+/* ---------------- sound ---------------- */
+let audioCtx = null;
+function unlockAudio(){
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+  }catch(e){}
+}
+function playChime(){
+  try{
+    unlockAudio();
+    if(!audioCtx) return;
+    const notes = [659.25, 783.99, 987.77, 1318.51]; // E5 G5 B5 E6
+    notes.forEach((freq, i)=>{
+      const t = audioCtx.currentTime + i*0.22;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.exponentialRampToValueAtTime(0.12, t+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t+0.4);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(t); osc.stop(t+0.45);
+    });
+  }catch(e){}
+}
+function playPing(){
+  try{
+    unlockAudio();
+    if(!audioCtx) return;
+    [880, 1174.66].forEach((freq, i)=>{ // A5 D6, soft two-note ping
+      const t = audioCtx.currentTime + i*0.16;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.exponentialRampToValueAtTime(0.08, t+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t+0.3);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(t); osc.stop(t+0.35);
+    });
+  }catch(e){}
+}
+const ORIGINAL_TITLE = document.title;
+let titleFlash = null;
+function startTitleFlash(msg = 'BREAK TIME - Study Cat'){
+  clearInterval(titleFlash);
+  let on = false;
+  titleFlash = setInterval(()=>{ document.title = on ? ORIGINAL_TITLE : msg; on = !on; }, 1000);
+}
+function stopTitleFlash(){ clearInterval(titleFlash); document.title = ORIGINAL_TITLE; }
 
 /* ---------------- breaks ---------------- */
 function scheduleBreak(){
@@ -982,6 +1052,7 @@ function scheduleBreak(){
   }, SETTINGS.WORK_LENGTH_MS);
 }
 function startBreak(){
+  stopTitleFlash();
   document.getElementById('nudge-overlay').classList.remove('active');
   pomodoroCount++;
   const isLongBreak = pomodoroCount >= SETTINGS.POMODOROS_BEFORE_LONG_BREAK;
@@ -989,6 +1060,8 @@ function startBreak(){
   if(isLongBreak) pomodoroCount = 0;
 
   showScreen('screen-break');
+  playChime();
+  startTitleFlash();
   playCatAnimation(document.getElementById('cat-canvas-break'), BREAK_CAT_FRAMES, 16, 2);
   startBreakCountdown(breakSeconds);
   saveState();
@@ -1010,6 +1083,7 @@ function updateBreakDisplay(secs){
 }
 function skipBreak(){
   clearInterval(breakInterval);
+  stopTitleFlash();
   showScreen('screen-session');
   playCatAnimation(document.getElementById('cat-canvas'), WORKING_CAT_FRAMES, 18, 2);
   runTimer();
@@ -1041,7 +1115,18 @@ function renderParkingList(){
   });
 }
 
-/* ---------------- spotify mock ---------------- */
+/* ---------------- spotify ---------------- */
+function updateDemoButton(){
+  const b = document.getElementById('demo-toggle');
+  if(b) b.textContent = demoMode ? 'DEMO MODE: ON' : 'DEMO MODE: OFF';
+}
+function toggleDemo(){
+  demoMode = !demoMode;
+  try{ localStorage.setItem('studyCatDemo', demoMode ? '1' : '0'); }catch(e){}
+  updateDemoButton();
+  if(activeScreen === 'screen-session'){ scheduleNudge(); scheduleBreak(); }
+}
+/* ---------------- spotify toggle ---------------- */
 function toggleSpotify(){
   spotifyOn = !spotifyOn;
   const strip = document.getElementById('spotify-strip');
@@ -1075,6 +1160,7 @@ function renderSummary(){
 }
 
 /* ---------------- boot ---------------- */
+document.addEventListener('click', unlockAudio);
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
   renderTasks();
@@ -1105,6 +1191,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('spotify-label').textContent = 'PLAYLIST: LO-FI MIX';
     document.getElementById('spotify-btn').textContent = 'STOP';
   }
+  document.getElementById('demo-toggle').addEventListener('click', toggleDemo);
+  updateDemoButton();
   if(activeScreen === 'screen-planner'){
     playCatAnimation(document.getElementById('cat-canvas-start'), STARTING_CAT_FRAMES, 18, 2);
   }

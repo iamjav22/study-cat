@@ -430,3 +430,13 @@ input[type=text]::placeholder{ color: #A79C84; }
 .nudge-sheet .sheet-row{ gap:8px; }
 .nudge-sheet .sheet-row button{ font-size:10px; padding:12px 6px; }
 .nudge-sheet #cat-canvas-nudge{ margin:4px 0 12px; }
+
+/* v5: demo toggle + spotify embed */
+.brandrow{ justify-content:space-between; }
+.brandrow .brand-dot{ margin-right:-0px; }
+.demo-toggle{
+  margin-left:auto; background:var(--chip); border:2px solid var(--line); color:var(--text);
+  font-family:'Press Start 2P', monospace; font-size:9px; padding:7px 9px; cursor:pointer;
+}
+.demo-toggle:active{ transform:translate(2px,2px); }
+.spotify-embed iframe{ display:block; border:3px solid var(--line); border-radius:0; }
