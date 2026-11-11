@@ -414,11 +414,19 @@ input[type=text]::placeholder{ color: #A79C84; }
 .task-row{ display:flex; align-items:stretch; gap:8px; }
 .task-row .task-chip{ flex:1; }
 .clock-btn canvas{ display:block; max-width:100%; max-height:100%; image-rendering:pixelated; }
-.task-row{ display:flex; align-items:stretch; gap:8px; }
-.task-row .task-chip{ flex:1; }
-.clock-btn{
-  width:44px; height:44px; padding:8px; box-sizing:border-box;
-  background:var(--chip); border:3px solid var(--line);
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
-}
-.clock-btn canvas{ display:block; max-width:100%; max-height:100%; image-rendering:pixelated; }
+
+/* v3: tighter spacing so each action sits right after its prompt */
+.sub{ margin:0; }
+.prompt{ margin:0; }
+.screen{ gap:12px; }
+#time-hint{ margin-top:6px; }
+.time-picker{ border-top:3px solid var(--line); margin-top:8px; }
+.task-chip-wrap{ gap:0; }
+
+/* v4: nudge popup — cat centered, question, then actions right under it */
+.nudge-sheet{ max-width:480px; align-items:stretch; }
+.nudge-sheet .nudge-row{ flex-direction:column; align-items:center; gap:10px; text-align:center; }
+.nudge-sheet .nudge-text{ text-align:center; }
+.nudge-sheet .sheet-row{ gap:8px; }
+.nudge-sheet .sheet-row button{ font-size:10px; padding:12px 6px; }
+.nudge-sheet #cat-canvas-nudge{ margin:4px 0 12px; }

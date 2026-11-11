@@ -6,7 +6,7 @@
 <title>Study Cat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 
@@ -21,10 +21,10 @@
 
   <!-- PLANNER SCREEN -->
   <div class="panel screen active" id="screen-planner">
-    <h1 class="prompt">WHAT ARE WE<br>WORKING ON TODAY?</h1>
 <div class="cat-stage">
   <canvas id="cat-canvas-start" width="320" height="260"></canvas>
 </div>
+    <h1 class="prompt">WHAT ARE WE<br>WORKING ON TODAY?</h1>
 <p class="sub">&gt; add each subject as its own block_</p>
     <div class="task-input-row">
   <input type="text" id="task-input" placeholder="eg. Design portfolio" />
@@ -99,7 +99,7 @@
 
 <!-- NUDGE OVERLAY -->
 <div class="overlay" id="nudge-overlay">
-  <div class="sheet">
+  <div class="sheet nudge-sheet">
     <div class="nudge-row">
       <canvas id="cat-canvas-nudge" width="120" height="100"></canvas>
       <div class="nudge-text">STILL ON <span id="nudge-subject">BIOLOGY</span>?</div>
@@ -107,6 +107,7 @@
     <div class="sheet-row">
       <button class="yes-btn" id="nudge-yes-btn">YES</button>
       <button class="no-btn" id="nudge-no-btn">SWITCHING</button>
+      <button class="no-btn idea-btn" id="nudge-idea-btn" title="Parking lot">&#128190; IDEA</button>
     </div>
   </div>
 </div>
@@ -125,6 +126,6 @@
   </div>
 </div>
 
-<script src="app.js"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>

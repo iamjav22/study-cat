@@ -758,9 +758,12 @@ function renderTasks(){
 
     const row = document.createElement('div');
     row.className = 'task-row';
+    row.style.cssText = 'display:flex;align-items:stretch;gap:8px;';
 
     const chip = document.createElement('div');
     chip.className = 'task-chip';
+    chip.style.flex = '1';
+    chip.style.minWidth = '0';
 
     const name = document.createElement('span');
     name.className = 'task-chip-name';
@@ -778,11 +781,12 @@ function renderTasks(){
 
     const clockBtn = document.createElement('button');
     clockBtn.className = 'clock-btn';
+    clockBtn.style.cssText = 'width:46px;height:auto;min-height:46px;flex:0 0 46px;padding:8px;display:flex;align-items:center;justify-content:center;background:#EFE7CC;border:3px solid #2B2420;cursor:pointer;';
     clockBtn.addEventListener('click', ()=> toggleTimePicker(i));
     const clockCanvas = document.createElement('canvas');
     clockBtn.appendChild(clockCanvas);
     row.appendChild(clockBtn);
-    drawCatSprite(clockCanvas, CLOCK_ICON, 3);
+    drawCatSprite(clockCanvas, CLOCK_ICON, 2);
 
     wrap.appendChild(row);
 
@@ -1090,6 +1094,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('nudge-yes-btn').addEventListener('click', ()=>closeNudge(true));
   document.getElementById('nudge-no-btn').addEventListener('click', ()=>closeNudge(false));
+  document.getElementById('nudge-idea-btn').addEventListener('click', ()=>{ closeNudge(true); openParkingLot(); });
 
   document.getElementById('spotify-btn').addEventListener('click', toggleSpotify);
   document.getElementById('back-to-work-btn').addEventListener('click', skipBreak);
